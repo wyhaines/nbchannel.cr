@@ -1,5 +1,9 @@
 # nbchannel
 
+![Send.cr CI](https://img.shields.io/github/workflow/status/wyhaines/nbchannel.cr/Send.cr%20CI?style=for-the-badge&logo=GitHub)
+[![GitHub release](https://img.shields.io/github/release/wyhaines/Send.cr.svg?style=for-the-badge)](https://github.com/wyhaines/nbchannel.cr/releases)
+![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/wyhaines/nbchannel.cr/latest?style=for-the-badge)
+
 This is a subclass of the standard Crystal Channel to make it into a non-blocking Channel implementation. The normal Crystal Channel blocks on receive, and on send if the channel the channel has no buffer, or if the fixed-size buffer is full. This non-blocking channel implementation makes it possible to send and receive messages asynchronously, with no blocking on either receive or send.
 
 ## Installation
@@ -67,3 +71,6 @@ puts channel.receive? || "You escaped the trap!"
 ## Contributors
 
 - [Kirk Haines](https://github.com/wyhaines) - creator and maintainer
+
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/wyhaines/nbchannel.cr?style=for-the-badge)
+![GitHub issues](https://img.shields.io/github/issues/wyhaines/nbchannel.cr?style=for-the-badge)
