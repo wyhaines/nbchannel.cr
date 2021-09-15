@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Crystal Docs 1.0.0">
+<meta name="crystal_docs.project_version" content="main">
+<meta name="crystal_docs.project_name" content="nbchannel">
+
+
+
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="js/doc.js"></script>
+
+  <meta name="repository-name" content="nbchannel">
+  <title>nbchannel main</title>
+  <script type="text/javascript">
+  CrystalDocs.base_path = "";
+  </script>
+</head>
+<body>
+
+<svg class="hidden">
+  <symbol id="octicon-link" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path>
+  </symbol>
+</svg>
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="search-box">
+      <input type="search" class="search-input" placeholder="Search..." spellcheck="false" aria-label="Search">
+    </div>
+
+    <div class="project-summary">
+      <h1 class="project-name">
+        <a href="index.html">
+          nbchannel
+        </a>
+      </h1>
+
+      <span class="project-version">
+        main
+      </span>
+    </div>
+  </div>
+
+  <div class="search-results hidden">
+    <ul class="search-list"></ul>
+  </div>
+
+  <div class="types-list">
+    <ul>
+  
+  <li class=" " data-id="nbchannel/NBChannel" data-name="nbchannel(t)">
+      <a href="NBChannel.html">NBChannel</a>
+      
+    </li>
+  
+</ul>
+
+  </div>
+</div>
+
+
+<div class="main-content">
+<h1><a id="nbchannel" class="anchor" href="#nbchannel">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>nbchannel</h1>
+
+<p><img src="https://img.shields.io/github/workflow/status/wyhaines/nbchannel.cr/Send.cr%20CI?style=for-the-badge&logo=GitHub" alt="Send.cr CI"/>
+<a href="https://github.com/wyhaines/nbchannel.cr/releases"><img src="https://img.shields.io/github/release/wyhaines/Send.cr.svg?style=for-the-badge" alt="GitHub release"/></a>
+<img src="https://img.shields.io/github/commits-since/wyhaines/nbchannel.cr/latest?style=for-the-badge" alt="GitHub commits since latest release (by SemVer)"/></p>
+
+<p>This is a subclass of the standard Crystal Channel to make it into a non-blocking Channel implementation. The normal Crystal Channel blocks on receive, and on send if the channel the channel has no buffer, or if the fixed-size buffer is full. This non-blocking channel implementation makes it possible to send and receive messages asynchronously, with no blocking on either receive or send.</p>
+
+<h2><a id="installation" class="anchor" href="#installation">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Installation</h2>
+
+<ol><li>Add the dependency to your <code>shard.yml</code>:</li></ol>
+
+<p><code></code>`yaml
+   dependencies:</p>
+
+<pre><code class="language-crystal"> nbchannel:
+   github: wyhaines/nbchannel</code></pre>
+
+<p><code></code>`</p>
+
+<ol><li>Run <code>shards install</code></li></ol>
+
+<h2><a id="usage" class="anchor" href="#usage">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Usage</h2>
+
+<pre><code class="language-crystal"><span class="k">require</span> <span class="s">&quot;nbchannel&quot;</span></code></pre>
+
+<p>An instance of <code><a href="NBChannel.html">NBChannel</a></code> is created in almost exactly the same way as standard Crystal <code>Channel</code>. The only difference is that an <code><a href="NBChannel.html">NBChannel</a></code> has infinite capacity, so there is no capacity argument to <code>#new</code>.</p>
+
+<pre><code class="language-crystal">channel <span class="o">=</span> <span class="t">NBChannel</span>(<span class="t">String</span>).<span class="k">new</span></code></pre>
+
+<p>Once created, any Fiber/Thread should be able to <code>#send</code> to an <code><a href="NBChannel.html">NBChannel</a></code> without ever blocking on the send.</p>
+
+<pre><code class="language-crystal">channel.send(<span class="s">&quot;I am a message.&quot;</span>)</code></pre>
+
+<p>Messages can be received from a channel in a blocking or a nonblocking manner.</p>
+
+<pre><code class="language-crystal">channel <span class="o">=</span> <span class="t">NBChannel</span>(<span class="t">String</span>).<span class="k">new</span>
+spawn channel.send(<span class="s">&quot;I am a message.&quot;</span>)
+msg <span class="o">=</span> channel.receive <span class="c"># This will block until a message is sent.</span></code></pre>
+
+<pre><code class="language-crystal">channel <span class="o">=</span> <span class="t">NBChannel</span>(<span class="t">String</span>).<span class="k">new</span>
+spawn <span class="k">do</span>
+  x <span class="o">=</span> rand.seconds <span class="o">*</span> <span class="n">1.0</span>
+  puts <span class="s">&quot;sleeping </span><span class="i">#{</span>x<span class="i">}</span><span class="s">&quot;</span>
+  sleep x
+  channel.send(<span class="s">&quot;Gotcha!&quot;</span>)
+<span class="k">end</span>
+
+y <span class="o">=</span> rand.seconds
+puts <span class="s">&quot;waiting </span><span class="i">#{</span>y<span class="i">}</span><span class="s">&quot;</span>
+sleep y
+
+puts channel.receive? || <span class="s">&quot;You escaped the trap!&quot;</span></code></pre>
+
+<h2><a id="contributing" class="anchor" href="#contributing">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Contributing</h2>
+
+<ol><li>Fork it (&lt;https://github.com/wyhaines/nbchannel/fork>)</li><li>Create your feature branch (<code>git checkout -b my-new-feature</code>)</li><li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li><li>Push to the branch (<code>git push origin my-new-feature</code>)</li><li>Create a new Pull Request</li></ol>
+
+<h2><a id="contributors" class="anchor" href="#contributors">
+  <svg class="octicon-link" aria-hidden="true">
+    <use href="#octicon-link"/>
+  </svg>
+</a>Contributors</h2>
+
+<ul><li><a href="https://github.com/wyhaines">Kirk Haines</a> - creator and maintainer</li></ul>
+
+<p><img src="https://img.shields.io/github/languages/code-size/wyhaines/nbchannel.cr?style=for-the-badge" alt="GitHub code size in bytes"/>
+<img src="https://img.shields.io/github/issues/wyhaines/nbchannel.cr?style=for-the-badge" alt="GitHub issues"/></p>
+</div>
+</body>
+</html>
