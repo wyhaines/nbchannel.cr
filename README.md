@@ -13,7 +13,7 @@ This is a subclass of the standard Crystal Channel to make it into a non-blockin
    ```yaml
    dependencies:
      nbchannel:
-       github: wyhaines/nbchannel
+       github: wyhaines/nbchannel.cr
    ```
 
 2. Run `shards install`
