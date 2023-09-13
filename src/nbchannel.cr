@@ -31,7 +31,7 @@ class NBChannel(T) < Channel(T)
     receive_impl(nonblocking: true) { return nil }
   end
 
-  private def receive_impl(nonblocking : Bool = false)
+  private def receive_impl(nonblocking : Bool = false, &)
     receiver = Receiver(T).new
 
     @lock.lock

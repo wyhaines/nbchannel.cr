@@ -37,14 +37,14 @@ describe NBChannel do
     last = 0_u64
     while (last = channel.receive) < (counter.get - 1); end
 
-    last.should eq (counter.get - 1)
+    last.should eq(counter.get - 1)
   end
 
   it "raises errors when channel is closed in before/during sends and receives" do
     channel = NBChannel(Int32).new
     channel.close
     expect_raises NBChannel::ClosedError do
-       channel.receive
+      channel.receive
     end
 
     channel = NBChannel(Int32).new
@@ -78,5 +78,4 @@ describe NBChannel do
     sleep 1
     last.should eq 9999999
   end
-
 end
