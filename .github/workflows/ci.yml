@@ -2,11 +2,11 @@ name: NBChannel.cr CI
 
 on:
   schedule:
-    - cron:  '0 3 * * *'
+    - cron: "0 3 * * *"
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -15,18 +15,34 @@ jobs:
     container:
       image: crystallang/crystal
 
+    strategy:
+      fail-fast: false
+      matrix:
+        crystal: ["1.18.1", "1.19.0", "1.20.3", "1.21.1", "1.22.2"]
+        experimental: [false]
+        include:
+          - crystal_version: nightly
+            experimental: true
+
+    name: Crystal ${{ matrix.crystal }}
+    continue-on-error: ${{ matrix.experimental }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: shards install
-    - name: Run tests
-      run: crystal spec -t -s
-    - name: Run Ameba
-      run: bin/ameba
-    - name: Build docs
-      run: crystal docs
-    - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs
+      - uses: actions/checkout@v7
+      - uses: crystal-lang/install-crystal@v1
+        with:
+          crystal: ${{ matrix.crystal }}
+      - name: Install dependencies
+        run: shards install
+      - name: Run tests
+        env:
+          LOG_LEVEL: trace
+        run: crystal spec -t -s
+      - name: Run Ameba
+        run: bin/ameba
+      - name: Build docs
+        run: crystal docs
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
